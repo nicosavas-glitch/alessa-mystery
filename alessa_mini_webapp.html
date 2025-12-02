@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alessa Mystery App</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+    background: radial-gradient(circle at top left, #fceaff, #f9f5ff, #ffd6f0);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .app-container {
+    width: 90%;
+    max-width: 600px;
+    background: rgba(255,255,255,0.95);
+    padding: 40px 30px;
+    border-radius: 30px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(168,79,176,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  h1 {
+    font-family: 'Pacifico', cursive;
+    color: #a84fb0;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-shadow: 3px 3px 8px rgba(168,79,176,0.5);
+  }
+  p {
+    font-size: 1.5em;
+    margin-bottom: 25px;
+    color: #4a1a4c;
+    line-height: 1.5;
+  }
+  button {
+    padding: 16px 28px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #a84fb0, #e88ed0);
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 8px 20px rgba(168,79,176,0.5);
+    transition: all 0.3s ease;
+  }
+  button:hover {
+    background: linear-gradient(135deg, #e88ed0, #a84fb0);
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(168,79,176,0.7);
+  }
+  input[type='password'] {
+    padding: 14px;
+    font-size: 18px;
+    margin-top: 20px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    width: 85%;
+    text-align: center;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .hidden { display:none; }
+  .heart {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background: red;
+    transform: rotate(-45deg);
+    animation: float 4s linear infinite;
+  }
+  .heart::before, .heart::after {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background: red;
+    border-radius: 50%;
+  }
+  .heart::before { top: -12px; left: 0; }
+  .heart::after { top: 0; left: 12px; }
+  @keyframes float {
+    0% {transform: translateY(0) rotate(-45deg); opacity: 1;}
+    100% {transform: translateY(-400px) rotate(-45deg); opacity: 0;}
+  }
+</style>
+</head>
+<body>
+<div class="app-container">
+  <h1>Alessa Mystery App</h1>
+  <p id="text">Willkommen zu deiner kleinen Mission...</p>
+  <button id="next">Weiter</button>
+  <div id="passwordDiv" class="hidden">
+    <p>Gib das geheime Wort ein, um die Überraschung zu erhalten:</p>
+    <input type="password" id="passwordInput" placeholder="Geheimes Wort" />
+    <button id="submitPassword">Absenden</button>
+    <p id="passwordMsg" style="color:red;margin-top:10px;"></p>
+  </div>
+</div>
+<script>
+const steps = [
+  "Bevor wir beginnen: Bitte mach dir ein schönes Glas Wein. 🍷",
+  "Nimm einen ersten Schluck. Nur einen. Genieße ihn.",
+  "Rätsel 1: Ich habe keine Beine, aber kann dich trotzdem umhauen. Was bin ich?",
+  "Rätsel 2: Ich klopfe, wenn du jemanden magst. Stolpere, wenn du überrascht wirst. Was bin ich? 💓",
+  "Rätsel 3: Ich bin unsichtbar, aber du kannst mich hören. Ich bin ein Gefühl, aber ich kann klingen. Was bin ich?",
+  "Fantastisch! Du hast alle Rätsel gelöst. Gib jetzt das geheime Wort ein für die Überraschung."
+];
+const secretWord = 'LIEBE';
+const songLink = '[DEIN SONG-LINK HIER]';
+let index=0;
+const text=document.getElementById('text');
+const nextBtn=document.getElementById('next');
+const passwordDiv=document.getElementById('passwordDiv');
+const passwordInput=document.getElementById('passwordInput');
+const submitPassword=document.getElementById('submitPassword');
+const passwordMsg=document.getElementById('passwordMsg');
+
+function showText(){
+  text.style.opacity=0;
+  text.style.transform='translateY(30px)';
+  setTimeout(()=>{
+    text.textContent=steps[index];
+    text.style.opacity=1;
+    text.style.transform='translateY(0)';
+    createHearts();
+  },300);
+}
+
+nextBtn.addEventListener('click',()=>{
+  index++;
+  if(index<steps.length){
+    showText();
+  } else {
+    nextBtn.style.display='none';
+    passwordDiv.classList.remove('hidden');
+  }
+});
+
+submitPassword.addEventListener('click',()=>{
+  if(passwordInput.value.toUpperCase()===secretWord){
+    text.innerHTML=`Herzlichen Glückwunsch, Alessa! 🎉<br>Hier ist deine Überraschung: <a href='${songLink}' target='_blank'>Klicke hier für deinen Song</a>`;
+    passwordDiv.classList.add('hidden');
+  } else {
+    passwordMsg.textContent='Falsches Wort! Versuche es noch einmal.';
+  }
+});
+
+function createHearts(){
+  for(let i=0;i<4;i++){
+    const heart=document.createElement('div');
+    heart.className='heart';
+    heart.style.left=Math.random()*90+'%';
+    heart.style.animationDuration=(2+Math.random()*2)+'s';
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),4000);
+  }
+}
+
+showText();
+</script>
+</body>
+</html>
