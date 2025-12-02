@@ -1,38 +1,4 @@
 <!DOCTYPE html>
-max-width: 480px;
-text-align: center;
-}
-h1 {
-color: #a84fb0;
-}
-button {
-padding: 12px 20px;
-border: none;
-border-radius: 10px;
-background: #a84fb0;
-color: white;
-font-size: 16px;
-cursor: pointer;
-margin-top: 15px;
-}
-button:hover {
-background: #8b3f92;
-}
-.hidden {
-display: none;
-}
-.step {
-margin-top: 20px;
-font-size: 18px;
-}
-input[type='password'] {
-padding: 10px;
-font-size: 16px;
-margin-top: 15px;
-border-radius: 8px;
-border: 1px solid #ccc;
-width: 80%;
-text-align: center;
 }
 </style>
 </head>
@@ -40,8 +6,6 @@ text-align: center;
 <div class="container">
 <h1>Alessa Mystery Experience</h1>
 <p id="text">Willkommen zu deiner kleinen Mission...</p>
-
-
 <button id="next">Weiter</button>
 <div id="passwordDiv" class="hidden">
 <p>Gib das geheime Wort ein, um die Überraschung zu erhalten:</p>
@@ -63,7 +27,6 @@ const steps = [
 ];
 
 
-let index = 0;
 const text = document.getElementById('text');
 const nextBtn = document.getElementById('next');
 const passwordDiv = document.getElementById('passwordDiv');
@@ -72,14 +35,29 @@ const submitPassword = document.getElementById('submitPassword');
 const passwordMsg = document.getElementById('passwordMsg');
 
 
-const secretWord = 'LIEBE'; // Du kannst hier das Passwort anpassen
+const secretWord = 'LIEBE';
 const songLink = '[DEIN SONG-LINK HIER]';
+
+
+let index = 0;
+
+
+function showText() {
+text.style.opacity = 0;
+text.style.transform = 'translateY(20px)';
+setTimeout(() => {
+text.textContent = steps[index];
+text.style.opacity = 1;
+text.style.transform = 'translateY(0)';
+createHearts();
+}, 300);
+}
 
 
 nextBtn.addEventListener('click', () => {
 index++;
-if (index < steps.length) {
-text.textContent = steps[index];
+if(index < steps.length){
+showText();
 } else {
 nextBtn.style.display = 'none';
 passwordDiv.classList.remove('hidden');
@@ -95,6 +73,21 @@ passwordDiv.classList.add('hidden');
 passwordMsg.textContent = 'Falsches Wort! Versuche es noch einmal.';
 }
 });
+
+
+function createHearts(){
+for(let i=0; i<3; i++){
+const heart = document.createElement('div');
+heart.className = 'heart';
+heart.style.left = Math.random() * 90 + '%';
+heart.style.animationDuration = (2 + Math.random() * 2) + 's';
+document.body.appendChild(heart);
+setTimeout(()=> heart.remove(), 3000);
+}
+}
+
+
+showText();
 </script>
 </body>
 </html>
